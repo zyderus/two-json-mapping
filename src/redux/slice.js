@@ -1,38 +1,58 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { mmfields } from '../data/mmfields';
 import { erpfields } from '../data/erpfields';
 import { mappedfields } from '../data/mappedfields';
 
+const mmfieldsAdapter = createEntityAdapter({
+  selectId: (mmfield) => mmfield.id,
+});
+
+const erpfieldsAdapter = createEntityAdapter({
+  selectId: (erpfield) => erpfield.field_id,
+});
+
+const mapfieldsAdapter = createEntityAdapter({
+  selectId: (mapfield) => mapfield.manomano_field_id,
+});
+
 const initialState = {
-  mmfields: [],
-  erpfields: [],
-  mappedfields: [],
+  mm: mmfieldsAdapter.getInitialState(),
+  erp: erpfieldsAdapter.getInitialState(),
+  map: mapfieldsAdapter.getInitialState(),
   loading: false,
   error: null,
 };
-
 const fieldSlice = createSlice({
   name: 'fields',
   initialState,
   reducers: {
-    initialize: (state) => {
-      console.log('initialized');
-    },
     addMmFields: (state) => {
       const fields = Object.values(mmfields.content);
-      const sortedFields = fields.sort((a, b) => b.is_required - a.is_required);
-      state.mmfields = sortedFields;
+      // const sortedFields = fields.sort((a, b) => b.is_required - a.is_required);
+      // state.mmfields = sortedFields;
+      mmfieldsAdapter.setAll(state.mm, fields);
     },
     addErpFields: (state) => {
-      state.erpfields = erpfields.content;
+      erpfieldsAdapter.setAll(state.erp, erpfields.content);
     },
     addMapFields: (state) => {
-      state.mappedfields = mappedfields.content;
+      mapfieldsAdapter.setAll(state.map, mappedfields.content);
     },
   },
 });
 
-export const { initialize, addMmFields, addMapFields, addErpFields } =
-  fieldSlice.actions;
+export const mmSelectors = mmfieldsAdapter.getSelectors(
+  (state) => state.fields.mm
+);
+
+export const erpSelectors = erpfieldsAdapter.getSelectors(
+  (state) => state.fields.erp
+);
+
+export const mapSelectors = mapfieldsAdapter.getSelectors(
+  (state) => state.fields.map
+);
+
+export const actions = { ...fieldSlice.actions };
 
 export default fieldSlice.reducer;

@@ -1,21 +1,28 @@
 import '../App.css';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMapFields, addMmFields, addErpFields } from '../redux/slice';
+import { actions, mmSelectors } from '../redux/slice';
 import Select from '../components/select';
 
 const Fields = () => {
   const dispatch = useDispatch();
 
-  const mmfields = useSelector((state) => state.fields.mmfields);
+  const mmfields = useSelector(mmSelectors.selectEntities);
+
+  const useSortFields = (sortBy) => {
+    const entities = Object.values(mmfields);
+    return entities.sort((a, b) => b[sortBy] - a[sortBy]);
+  };
+
+  const sortedMmFields = useSortFields('is_required');
 
   useEffect(() => {
-    dispatch(addMmFields());
-    dispatch(addErpFields());
-    dispatch(addMapFields());
-  }, []);
+    dispatch(actions.addMmFields());
+    dispatch(actions.addErpFields());
+    dispatch(actions.addMapFields());
+  }, [dispatch]);
 
-  const rows = mmfields.map((field, i) => (
+  const rows = sortedMmFields.map((field, i) => (
     <tr key={i}>
       <td>{field.id}</td>
       <td>{field.is_required && '*'}</td>
@@ -34,7 +41,6 @@ const Fields = () => {
 
   return (
     <div className="tables">
-      <h3>Fields</h3>
       <table>
         <thead>
           <tr>
