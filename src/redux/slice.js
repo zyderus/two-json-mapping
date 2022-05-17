@@ -52,8 +52,13 @@ const fieldSlice = createSlice({
       }
     },
     deleteMapping: (state, action) => {
-      console.log(action.payload);
       mapfieldsAdapter.removeOne(state.map, action.payload);
+    },
+    setDefaultValue: (state, action) => {
+      const { id, static_value } = action.payload;
+      if (!state.map.entities[id]) return;
+
+      mapfieldsAdapter.updateOne(state.map, { id, changes: { static_value } });
     },
   },
 });

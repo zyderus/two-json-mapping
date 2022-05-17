@@ -2,7 +2,7 @@ import '../App.css';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, mmSelectors, erpSelectors } from '../redux/slice';
-import Select from '../components/select';
+import { Select, Input } from '../components';
 
 const Fields = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const Fields = () => {
         </button>
       </td>
       <td>
-        <input type="text" />
+        <Input rowData={field} />
       </td>
     </tr>
   ));
