@@ -1,20 +1,20 @@
 import '../App.css';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, mmSelectors } from '../redux/slice';
+import { actions, mmSelectors, erpSelectors } from '../redux/slice';
 import Select from '../components/select';
 
 const Fields = () => {
   const dispatch = useDispatch();
 
-  const mmfields = useSelector(mmSelectors.selectEntities);
+  const mmfields = useSelector(mmSelectors.selectAll);
+  const erps = useSelector(erpSelectors.selectAll);
 
-  const useSortFields = (sortBy) => {
-    const entities = Object.values(mmfields);
-    return entities.sort((a, b) => b[sortBy] - a[sortBy]);
+  const useSortFields = (arr, sortBy) => {
+    return arr.sort((a, b) => b[sortBy] - a[sortBy]);
   };
 
-  const sortedMmFields = useSortFields('is_required');
+  const sortedMmFields = useSortFields(mmfields, 'is_required');
 
   useEffect(() => {
     dispatch(actions.addMmFields());
@@ -25,10 +25,11 @@ const Fields = () => {
   const rows = sortedMmFields.map((field, i) => (
     <tr key={i}>
       <td>{field.id}</td>
-      <td>{field.is_required && '*'}</td>
-      <td>{field.label}</td>
+      <td className="field-name">
+        {field.is_required && '*'} {field.label}
+      </td>
       <td>
-        <Select rowId={field.id} />
+        <Select rowData={field} erps={erps} />
       </td>
       <td>
         <button>x</button>
@@ -45,7 +46,6 @@ const Fields = () => {
         <thead>
           <tr>
             <th>id</th>
-            <th>req</th>
             <th>Mano Field</th>
             <th>ERP Field</th>
             <th>Reset</th>

@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { mmfields } from '../data/mmfields';
 import { erpfields } from '../data/erpfields';
 import { mappedfields } from '../data/mappedfields';
+import { mapItemShape } from '../data/utils';
 
 const mmfieldsAdapter = createEntityAdapter({
   selectId: (mmfield) => mmfield.id,
@@ -28,8 +29,6 @@ const fieldSlice = createSlice({
   reducers: {
     addMmFields: (state) => {
       const fields = Object.values(mmfields.content);
-      // const sortedFields = fields.sort((a, b) => b.is_required - a.is_required);
-      // state.mmfields = sortedFields;
       mmfieldsAdapter.setAll(state.mm, fields);
     },
     addErpFields: (state) => {
@@ -37,6 +36,26 @@ const fieldSlice = createSlice({
     },
     addMapFields: (state) => {
       mapfieldsAdapter.setAll(state.map, mappedfields.content);
+    },
+    // selectErpField: (state, action) => {
+    //   console.log('payload', action.payload);
+    //   console.log('mapfields', state.map.entities);
+
+    //   mapfieldsAdapter.upsertOne(state, { somefield: action.payload });
+    // },
+    selectErpField: (state, action) => {
+      const { id, name, field_id } = action.payload;
+
+      if (state.map.entities[id]) {
+        mapfieldsAdapter.updateOne(state.map, { id, changes: { field_id } });
+      } else {
+        mapfieldsAdapter.upsertOne(state.map, {
+          ...mapItemShape,
+          manomano_field_id: id,
+          manomano_field_name: name,
+          field_id,
+        });
+      }
     },
   },
 });

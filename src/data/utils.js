@@ -1,3 +1,12 @@
+export const mapItemShape = {
+  manomano_field_name: '',
+  type: 'erp',
+  manomano_field_id: 0,
+  field_id: '',
+  static_value: '',
+  rule_value: null,
+};
+
 /*
 
 export const mmfieldsWithErpId = mmfields.map((mmfield) => {
