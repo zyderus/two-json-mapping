@@ -32,7 +32,9 @@ const Fields = () => {
         <Select rowData={field} erps={erps} />
       </td>
       <td>
-        <button>x</button>
+        <button onClick={() => dispatch(actions.deleteMapping(field.id))}>
+          x
+        </button>
       </td>
       <td>
         <input type="text" />

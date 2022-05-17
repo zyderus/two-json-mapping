@@ -37,12 +37,6 @@ const fieldSlice = createSlice({
     addMapFields: (state) => {
       mapfieldsAdapter.setAll(state.map, mappedfields.content);
     },
-    // selectErpField: (state, action) => {
-    //   console.log('payload', action.payload);
-    //   console.log('mapfields', state.map.entities);
-
-    //   mapfieldsAdapter.upsertOne(state, { somefield: action.payload });
-    // },
     selectErpField: (state, action) => {
       const { id, name, field_id } = action.payload;
 
@@ -56,6 +50,10 @@ const fieldSlice = createSlice({
           field_id,
         });
       }
+    },
+    deleteMapping: (state, action) => {
+      console.log(action.payload);
+      mapfieldsAdapter.removeOne(state.map, action.payload);
     },
   },
 });

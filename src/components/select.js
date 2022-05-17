@@ -15,7 +15,7 @@ const Select = ({ rowData, erps }) => {
 
   return (
     <select
-      defaultValue={mapField ? mapField.field_id : ''}
+      value={mapField ? mapField.field_id : ''}
       onChange={(e) =>
         dispatch(
           actions.selectErpField({ ...rowData, field_id: e.target.value })
