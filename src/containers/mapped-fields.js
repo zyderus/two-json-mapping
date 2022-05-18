@@ -22,25 +22,27 @@ const Fields = () => {
     dispatch(actions.addMapFields());
   }, [dispatch]);
 
-  const rows = sortedMmFields.map((field, i) => (
-    <tr key={i}>
-      <td>{field.id}</td>
-      <td className="field-name">
-        {field.is_required && '*'} {field.label}
-      </td>
-      <td>
-        <Select rowData={field} erps={erps} />
-      </td>
-      <td>
-        <button onClick={() => dispatch(actions.deleteMapping(field.id))}>
-          x
-        </button>
-      </td>
-      <td>
-        <Input rowData={field} />
-      </td>
-    </tr>
-  ));
+  const rows = sortedMmFields.map((field, i) => {
+    return (
+      <tr key={i}>
+        <td>{field.id}</td>
+        <td className="field-name">
+          {field.is_required && '*'} {field.label}
+        </td>
+        <td>
+          <Select erps={erps} mmFieldId={field.id} mmFieldName={field.name} />
+        </td>
+        <td>
+          <button onClick={() => dispatch(actions.deleteMapping(field.id))}>
+            x
+          </button>
+        </td>
+        <td>
+          <Input rowData={field} />
+        </td>
+      </tr>
+    );
+  });
 
   return (
     <div className="tables">
