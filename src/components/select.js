@@ -1,11 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { mapSelectors, actions } from '../redux/slice';
 
-const Select = ({ rowData, erps }) => {
+const Select = ({ erps, mmFieldId, mmFieldName }) => {
   const dispatch = useDispatch();
   const mapField = useSelector((state) =>
-    mapSelectors.selectById(state, rowData.id)
+    mapSelectors.selectById(state, mmFieldId)
   );
+
+  const handleSelectErpField = (e) => {
+    dispatch(
+      actions.selectErpField({
+        id: mmFieldId,
+        name: mmFieldName,
+        field_id: e.target.value,
+      })
+    );
+  };
 
   const options = erps.map((option) => (
     <option key={option.field_id} value={option.field_id}>
@@ -16,11 +26,7 @@ const Select = ({ rowData, erps }) => {
   return (
     <select
       value={mapField ? mapField.field_id : ''}
-      onChange={(e) =>
-        dispatch(
-          actions.selectErpField({ ...rowData, field_id: e.target.value })
-        )
-      }
+      onChange={handleSelectErpField}
     >
       {options}
     </select>

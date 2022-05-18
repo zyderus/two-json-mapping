@@ -16,55 +16,45 @@ const Input = ({ rowData }) => {
     );
   };
 
-  const handleCheckbox = (e) => {
-    const isChecked = mapField?.static_value === 'true';
+  const isChecked = mapField?.static_value === '1';
 
+  const handleCheckbox = (e) => {
     dispatch(
       actions.setDefaultValue({
         id: rowData.id,
-        static_value: isChecked ? 'false' : 'true',
+        static_value: isChecked ? '' : '1',
       })
     );
   };
 
-  const InputField = () => {
-    return (
-      <div style={{ display: 'flex' }}>
-        <input
-          type={inputType}
-          value={mapField?.static_value || ''}
-          onChange={handleChange}
-        />
-        <span>{rowData.type}</span>
-      </div>
-    );
-  };
+  const numberType =
+    rowData.type === 'float' ||
+    rowData.type === 'int' ||
+    rowData.type === 'money';
+  const checkboxType = rowData.type === 'boolean';
 
-  const InputCheckbox = () => {
-    const checked =
-      mapField?.static_value === 'true' || mapField?.static_value === true;
-    return (
-      <div style={{ display: 'flex' }}>
-        <input type="checkbox" onChange={handleCheckbox} checked={checked} />
-        <span>{rowData.type}</span>
-      </div>
-    );
-  };
-
-  let inputType = '';
-
-  switch (rowData.type) {
-    case 'boolean':
-      return <InputCheckbox />;
-    case 'float':
-    case 'int':
-    case 'money':
-      inputType = 'number';
-      return <InputField />;
-    default:
-      inputType = 'text';
-      return <InputField />;
-  }
+  return numberType ? (
+    <input
+      type="number"
+      value={mapField?.static_value || ''}
+      onChange={handleChange}
+      disabled={!mapField}
+    />
+  ) : checkboxType ? (
+    <input
+      type="checkbox"
+      onChange={handleCheckbox}
+      checked={isChecked}
+      disabled={!mapField}
+    />
+  ) : (
+    <input
+      type="text"
+      value={mapField?.static_value || ''}
+      onChange={handleChange}
+      disabled={!mapField}
+    />
+  );
 };
 
 export default Input;
